@@ -1,0 +1,60 @@
+#include<bits/stdc++.h>
+using namespace std;
+class Node{
+	public:
+	int data;
+	Node* next;
+	Node(int data){
+		this->data=data;
+		this->next=NULL;
+	}
+};
+int main(){
+	int n;
+	cin>>n;
+	Node* head;
+	Node* temp;
+	Node* data;
+	for(int i=0;i<n;i++){
+		int x;
+		cin>>x;
+		data = new Node(x);
+		if(i==0){
+			head = data;
+			temp = head;	
+		}	
+		else{
+			temp->next = data;
+			temp = temp->next;
+		}
+	}
+	Node* tmp = head;
+	int i=0;
+	int pos;
+	cin>>pos;
+	int a;
+	cin>>a;
+	Node* nd = new Node(a);
+	if(pos == 0){
+		nd->next = tmp;
+		tmp = nd;
+		head = nd;
+	}
+	else{
+		while(tmp!=NULL){
+		if(i == pos-1){
+		Node* a = tmp->next;
+		tmp->next = nd;
+		nd->next = a;	
+		}
+		else{
+			tmp = tmp->next;
+		}
+	i++;
+	}
+	}
+	while(head!=NULL){
+		cout<<head->data<<" ";
+		head = head->next;
+	}
+}
