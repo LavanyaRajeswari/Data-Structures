@@ -1,0 +1,59 @@
+// Minimum element in the Range using Segment tree 
+
+#include<bits/stdc++.h>
+using namespace std;
+#define ll long long
+struct SegmentTree{
+    ll n;
+    vector<ll>Tree;
+    SegmentTree(vector<ll>&A){
+        n = A.size();
+        Tree.resize(4*n);
+        Build(A,0,0,n-1);
+    }
+    void Build(vector<ll>&A, ll node, ll start, ll end){
+        if(start == end){
+            Tree[node] = A[start];
+            return;
+        }
+        ll mid = (start + end) / 2;
+        Build(A,2*node+1,start,mid);
+        Build(A,2*node+2,mid+1,end);
+        Tree[node] = min(Tree[2*node+1],Tree[2*node+2]);
+    }
+    
+    ll Query(ll node, ll start, ll end, ll Qs , ll Qe){
+        //no over lap 
+        if(Qs > end || Qe < start)return INT_MAX;
+        
+        //complete over lap
+        if(Qs <= start && Qe <= end){
+            return Tree[node];
+        }
+        //partial over lap
+        ll mid = (start + end) / 2;
+        ll left_min = Query(2*node+1,start,mid,Qs,Qe);
+        ll right_min = Query(2*node+2,mid+1,end,Qs,Qe);
+        
+        return min(left_min,right_min);
+    }
+    ll FindAns(ll l, ll r){
+        return Query(0,0,n-1,l,r); // start, end, l, r, node
+    }
+};
+
+int main(){
+    ll n , q;
+    cin >> n >> q;
+    vector<ll>A(n);
+    for(int i = 0 ; i < n ; i++){
+        cin >> A[i];
+    }
+    SegmentTree segTree(A);
+    
+    while(q--){
+        ll l, r;
+        cin >> l >> r;
+        cout << segTree.FindAns(l,r) << endl;
+    }
+}
